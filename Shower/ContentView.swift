@@ -37,11 +37,19 @@ struct ContentView: View {
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .scrollContentBackground(.hidden)
                             .background(Color(.systemGray6))
-                            .padding()
+                            .padding([.leading, .trailing, .top], 10)
+                            .padding(.bottom, 50) // Space for the slider
                             .minimumScaleFactor(0.5)
                             .textContentType(.name)
-                            .scrollDismissesKeyboard(.immediately)
                             .opacity(text.isEmpty ? 0.85 : 1)
+                            .gesture( // Hide keyboard on drag down
+                                DragGesture()
+                                    .onChanged { value in
+                                        if value.translation.height > 0 {
+                                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                                        }
+                                    }
+                            )
                     }
                     
                     VStack {
@@ -57,7 +65,7 @@ struct ContentView: View {
                                     }
                                     startHideSliderTimer()
                                 })
-                            Slider(value: $fontSize, in: 30...100, step: 5)
+                            Slider(value: $fontSize, in: 30...100, step: 1)
                                 .padding(.horizontal)
                                 .padding(.bottom)
                                 .cornerRadius(10)
