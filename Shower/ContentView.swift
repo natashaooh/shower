@@ -20,7 +20,7 @@ struct ContentView: View {
             Color(.systemGray6)
                 .edgesIgnoringSafeArea(.all)
             
-            VStack {
+            VStack(spacing: 0) {
                 ZStack {
                     ZStack(alignment: .leading) {
                         if text.isEmpty {
@@ -37,7 +37,8 @@ struct ContentView: View {
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .scrollContentBackground(.hidden)
                             .background(Color(.systemGray6))
-                            .padding([.leading, .trailing, .top], 10)
+                            // .padding([.leading, .trailing, .top], 10)
+                            .padding()
                             .padding(.bottom, 50) // Space for the slider
                             .minimumScaleFactor(0.5)
                             .textContentType(.name)
@@ -52,8 +53,18 @@ struct ContentView: View {
                             )
                     }
                     
-                    VStack {
+                    VStack(spacing: 0) {
                         Spacer()
+//                        // Gradient that fades out the text at the bottom
+                        LinearGradient(
+                            gradient: Gradient(stops: [
+                                .init(color: Color(.clear), location: 0),
+                                .init(color: Color(.systemGray6), location: 1)
+                            ]),
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                        .frame(width: UIScreen.main.bounds.width, height: 80)
                         ZStack {
                             Rectangle()
                                 .fill(Color.clear)
