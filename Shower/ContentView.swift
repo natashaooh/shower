@@ -5,6 +5,7 @@ struct ContentView: View {
     @State private var fontSize: CGFloat = 70
     @State private var isSliderShown = true
     @State private var hideSliderTimer: Timer?
+    @FocusState private var isFocused: Bool
     private let hideSliderAfterInactivityInterval: TimeInterval = 3
     private let placeholders = [
         "What can I get you?",
@@ -39,37 +40,48 @@ struct ContentView: View {
                             .background(Color(.systemGray6))
                             // .padding([.leading, .trailing, .top], 10)
                             .padding()
-                            .padding(.bottom, 50) // Space for the slider
+                           // .padding(.bottom, 50) // Space for the slider
                             .minimumScaleFactor(0.5)
                             .textContentType(.name)
                             .opacity(text.isEmpty ? 0.85 : 1)
+                            .focused($isFocused)
                             .gesture( // Hide keyboard on drag down
                                 DragGesture()
                                     .onChanged { value in
                                         if value.translation.height > 0 {
-                                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                                            isFocused = false
                                         }
                                     }
                             )
+                            .onAppear {
+                                        isFocused = true // Set the focus state to true on app start
+                                    }
                     }
                     
                     VStack(spacing: 0) {
                         Spacer()
 //                        // Gradient that fades out the text at the bottom
-                        LinearGradient(
-                            gradient: Gradient(stops: [
-                                .init(color: Color(.clear), location: 0),
-                                .init(color: Color(.systemGray6), location: 1)
-                            ]),
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                        .frame(width: UIScreen.main.bounds.width, height: 80)
+//                        LinearGradient(
+//                            gradient: Gradient(stops: [
+//                                .init(color: Color(.clear), location: 0),
+//                                .init(color: Color(.systemGray6), location: 1)
+//                            ]),
+//                            startPoint: .top,
+//                            endPoint: .bottom
+//                        )
+                        //.frame(width: UIScreen.main.bounds.width, height: 80)
                         ZStack {
                             Rectangle()
-                                .fill(Color.clear)
+                                .fill(LinearGradient(
+                                    gradient: Gradient(stops: [
+                                        .init(color: Color(.clear), location: 0),
+                                        .init(color: Color(.systemGray6), location: 1)
+                                    ]),
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                ))
                                 .contentShape(Rectangle())
-                                .frame(height: 40)
+                                .frame(height: 60)
                                 .gesture(TapGesture().onEnded {
                                     withAnimation(.easeIn(duration: 0.2)) {
                                         isSliderShown = true
@@ -78,7 +90,7 @@ struct ContentView: View {
                                 })
                             Slider(value: $fontSize, in: 30...100, step: 1)
                                 .padding(.horizontal)
-                                .padding(.bottom)
+                                //.padding(.bottom)
                                 .cornerRadius(10)
                                 .onChange(of: fontSize) { _ in
                                     resetHideSliderTimer()
