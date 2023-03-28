@@ -7,14 +7,15 @@ struct ContentView: View {
     @State private var hideSliderTimer: Timer?
     @FocusState private var isFocused: Bool
     private let hideSliderAfterInactivityInterval: TimeInterval = 3
-    private let placeholders = [
-        "What can I get you?",
-        "Can I get you a drink?",
-        "Where to?",
-        "What's your cell number?",
-        "How's your name spelled?"
+    private let placeholders: [(String, UITextContentType?)] = [
+        ("Where to?", .fullStreetAddress),
+        ("What's your cell number?", .telephoneNumber),
+        ("How do you spell your name?", .name),
+        ("What can I get you?", nil),
+        ("Can I get you a drink?", nil)
     ]
-    @State private var placeholderText = ""
+    @State private var placeholderText: String = ""
+    @State private var textContentType: UITextContentType?
     
     var body: some View {
         ZStack {
@@ -38,11 +39,9 @@ struct ContentView: View {
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .scrollContentBackground(.hidden)
                             .background(Color(.systemGray6))
-                            // .padding([.leading, .trailing, .top], 10)
                             .padding()
-                           // .padding(.bottom, 50) // Space for the slider
                             .minimumScaleFactor(0.5)
-                            .textContentType(.name)
+                            .textContentType(textContentType)
                             .opacity(text.isEmpty ? 0.85 : 1)
                             .focused($isFocused)
                             .gesture( // Hide keyboard on drag down
@@ -54,27 +53,18 @@ struct ContentView: View {
                                     }
                             )
                             .onAppear {
-                                        isFocused = true // Set the focus state to true on app start
+                                        isFocused = true
                                     }
                     }
                     
                     VStack(spacing: 0) {
                         Spacer()
-//                        // Gradient that fades out the text at the bottom
-//                        LinearGradient(
-//                            gradient: Gradient(stops: [
-//                                .init(color: Color(.clear), location: 0),
-//                                .init(color: Color(.systemGray6), location: 1)
-//                            ]),
-//                            startPoint: .top,
-//                            endPoint: .bottom
-//                        )
-                        //.frame(width: UIScreen.main.bounds.width, height: 80)
                         ZStack {
                             Rectangle()
                                 .fill(LinearGradient(
                                     gradient: Gradient(stops: [
                                         .init(color: Color(.clear), location: 0),
+                                        .init(color: Color(.systemGray6), location: 0.5),
                                         .init(color: Color(.systemGray6), location: 1)
                                     ]),
                                     startPoint: .top,
@@ -90,7 +80,6 @@ struct ContentView: View {
                                 })
                             Slider(value: $fontSize, in: 30...100, step: 1)
                                 .padding(.horizontal)
-                                //.padding(.bottom)
                                 .cornerRadius(10)
                                 .onChange(of: fontSize) { _ in
                                     resetHideSliderTimer()
@@ -132,7 +121,10 @@ struct ContentView: View {
     }
     
     private func chooseRandomPlaceholder() {
-        placeholderText = placeholders.randomElement() ?? ""
+        if let randomPlaceholder = placeholders.randomElement() {
+            placeholderText = randomPlaceholder.0
+            textContentType = randomPlaceholder.1
+        }
     }
 }
 
