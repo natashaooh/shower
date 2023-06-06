@@ -5,6 +5,7 @@ struct ContentView: View {
     @State private var fontSize: CGFloat = 70
     @State private var isSliderShown = true
     @State private var hideSliderTimer: Timer?
+    private let eraseButtonSize: CGFloat = 60
     @FocusState private var isFocused: Bool
     private let hideSliderAfterInactivityInterval: TimeInterval = 3
     private let placeholders: [(String, UITextContentType?)] = [
@@ -30,6 +31,7 @@ struct ContentView: View {
                                 Text(placeholderText)
                                     .padding(EdgeInsets(top: 23, leading: 21, bottom: 20, trailing: 20))
                                     .font(.system(size: fontSize, weight: .bold))
+                                    .foregroundColor(Color(UIColor.systemGray))
                                 Spacer()
                             }
                         }
@@ -78,19 +80,27 @@ struct ContentView: View {
                                     }
                                     startHideSliderTimer()
                                 })
-                            Slider(value: $fontSize, in: 30...100, step: 1)
-                                .padding(.horizontal)
-                                .cornerRadius(10)
-                                .onChange(of: fontSize) { _ in
-                                    resetHideSliderTimer()
-                                }
-                                .onAppear {
-                                    startHideSliderTimer()
-                                }
-                                .onDisappear {
-                                    invalidateHideSliderTimer()
-                                }
-                                .opacity(isSliderShown ? 1 : 0)
+                            
+                            HStack(spacing: 0) {
+                                EraseButtonView(text: $text)
+                                    .frame(width: eraseButtonSize, height: eraseButtonSize * 1.5)
+                                    .padding(.leading, 10)
+                                
+                                Slider(value: $fontSize, in: 30...100, step: 1)
+                                    .padding(.horizontal)
+                                    .cornerRadius(10)
+                                    .onChange(of: fontSize) { _ in
+                                        resetHideSliderTimer()
+                                    }
+                                    .onAppear {
+                                        startHideSliderTimer()
+                                    }
+                                    .onDisappear {
+                                        invalidateHideSliderTimer()
+                                    }
+                                    
+                            }
+                            .opacity(isSliderShown ? 1 : 0)
                         }
                     }
                 }
