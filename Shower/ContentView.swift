@@ -1,13 +1,10 @@
 import SwiftUI
 
 struct ContentView: View {
+    // Text editor
     @State private var text: String = ""
     @State private var fontSize: CGFloat = 70
-    @State private var isSliderShown = true
-    @State private var hideSliderTimer: Timer?
-    private let eraseButtonSize: CGFloat = 60
     @FocusState private var isFocused: Bool
-    private let hideSliderAfterInactivityInterval: TimeInterval = 3
     private let placeholders: [(String, UITextContentType?)] = [
         ("Where to?", .fullStreetAddress),
         ("What's your cell number?", .telephoneNumber),
@@ -17,6 +14,20 @@ struct ContentView: View {
     ]
     @State private var placeholderText: String = ""
     @State private var textContentType: UITextContentType?
+    
+    // Buttons
+    private let eraseButtonSize: CGFloat = 45
+    @State private var isPlusButtonPressed = false
+    @State private var isMinusButtonPressed = false
+    @State var timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+    @State var isPressing = false
+
+    private let fontSizeStep: CGFloat = 5
+    private let minFontSize: CGFloat = 30
+    private let maxFontSize: CGFloat = 150
+    private let longPressDelay: TimeInterval = 0.5
+    private let longPressInterval: TimeInterval = 0.1
+
     
     var body: some View {
         ZStack {
@@ -66,7 +77,6 @@ struct ContentView: View {
                                 .fill(LinearGradient(
                                     gradient: Gradient(stops: [
                                         .init(color: Color(.clear), location: 0),
-                                        .init(color: Color(.systemGray6), location: 0.5),
                                         .init(color: Color(.systemGray6), location: 1)
                                     ]),
                                     startPoint: .top,
@@ -74,33 +84,81 @@ struct ContentView: View {
                                 ))
                                 .contentShape(Rectangle())
                                 .frame(height: 60)
-                                .gesture(TapGesture().onEnded {
-                                    withAnimation(.easeIn(duration: 0.2)) {
-                                        isSliderShown = true
-                                    }
-                                    startHideSliderTimer()
-                                })
                             
                             HStack(spacing: 0) {
-                                EraseButtonView(text: $text)
-                                    .frame(width: eraseButtonSize, height: eraseButtonSize * 1.5)
-                                    .padding(.leading, 10)
                                 
-                                Slider(value: $fontSize, in: 30...100, step: 1)
-                                    .padding(.horizontal)
-                                    .cornerRadius(10)
-                                    .onChange(of: fontSize) { _ in
-                                        resetHideSliderTimer()
-                                    }
-                                    .onAppear {
-                                        startHideSliderTimer()
-                                    }
-                                    .onDisappear {
-                                        invalidateHideSliderTimer()
-                                    }
+                                // Erase button
+                                Button {
+                                    text = ""
+                                } label: {
+                                    Image(systemName: "eraser")
+                                        .font(.system(size: eraseButtonSize))
+                                        .padding()
+                                        .frame(maxWidth: .infinity)
+                                        .contentShape(Rectangle())
+                                        .accessibility(hidden: true)
+                                }
+                                    .disabled(text == "")
+                                    .accessibilityLabel("Erase")
+                                
+                                
+                                Button {
+                                    fontSize = max(minFontSize, fontSize - 10)
+                                    
+                                } label: {
+                                    Image(systemName: "minus")
+                                        .font(.system(size: eraseButtonSize))
+                                        .padding()
+                                        .frame(maxWidth: .infinity)
+                                        .contentShape(Rectangle())
+                                        .accessibility(hidden: true)
+                                    
+                                }
+                                    .disabled(fontSize <= minFontSize)
+                                    .accessibilityLabel"Decreate Font Size")
+
+//                                    .onLongPressGesture(minimumDuration: .infinity, maximumDistance: .infinity) {
+//                                    } onPressingChanged: {
+//                                        isPressing in
+//                                                self.isPressing = isPressing
+//                                        if !isPressing {
+//                                            timer.upstream.connect().cancel() // when the isPressing is false that means the game ended
+//                                        }
+//                                    }
+                                
+                                
+                                
+                                // Plus button
+                                Button {
+                                    fontSize = min(maxFontSize, fontSize + 10)
+                                } label: {
+                                    Image(systemName: "plus")
+                                        .font(.system(size: eraseButtonSize))
+                                        .padding()
+                                        .frame(maxWidth: .infinity)
+                                        .contentShape(Rectangle())
+                                        .accessibility(hidden: true)
+                                }
+                                    .disabled(fontSize >= maxFontSize)
+                                    .accessibilityLabel("Increase Font Size")
+
+                                
+                                // Paste button
+                                Button {
+                                    text = UIPasteboard.general.string ?? ""
+                                } label: {
+                                    Image(systemName: "doc.on.clipboard")
+                                        .font(.system(size: eraseButtonSize - 10))
+                                        .padding()
+                                        .frame(maxWidth: .infinity)
+                                        .contentShape(Rectangle())
+                                        .accessibility(hidden: true)
+                                }
+                                    .disabled(!UIPasteboard.general.hasStrings)
+                                    .accessibilityLabel("Paste From Clipboard")
+
                                     
                             }
-                            .opacity(isSliderShown ? 1 : 0)
                         }
                     }
                 }
@@ -111,32 +169,15 @@ struct ContentView: View {
         }
     }
     
-    private func startHideSliderTimer() {
-        hideSliderTimer?.invalidate()
-        hideSliderTimer = Timer.scheduledTimer(withTimeInterval: hideSliderAfterInactivityInterval, repeats: false) { _ in
-            withAnimation(.easeIn(duration: 0.2)) {
-                isSliderShown = false
-            }
-        }
-    }
-    
-    private func resetHideSliderTimer() {
-        hideSliderTimer?.invalidate()
-        startHideSliderTimer()
-    }
-    
-    private func invalidateHideSliderTimer() {
-        hideSliderTimer?.invalidate()
-        hideSliderTimer = nil
-    }
-    
     private func chooseRandomPlaceholder() {
         if let randomPlaceholder = placeholders.randomElement() {
             placeholderText = randomPlaceholder.0
             textContentType = randomPlaceholder.1
         }
     }
+    
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

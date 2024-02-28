@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2F8D07802A1815F70061A2F5 /* EraseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8D077F2A1815F70061A2F5 /* EraseButton.swift */; };
-		2F8D07822A1818D10061A2F5 /* EraseButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F8D07812A1818D10061A2F5 /* EraseButtonView.swift */; };
 		2FA9E04229D0D118009DA858 /* ShowerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA9E04129D0D118009DA858 /* ShowerApp.swift */; };
 		2FA9E04429D0D118009DA858 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA9E04329D0D118009DA858 /* ContentView.swift */; };
 		2FA9E04629D0D118009DA858 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2FA9E04529D0D118009DA858 /* Assets.xcassets */; };
@@ -16,8 +14,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2F8D077F2A1815F70061A2F5 /* EraseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EraseButton.swift; sourceTree = "<group>"; };
-		2F8D07812A1818D10061A2F5 /* EraseButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EraseButtonView.swift; sourceTree = "<group>"; };
 		2FA9E03E29D0D118009DA858 /* Shower.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shower.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FA9E04129D0D118009DA858 /* ShowerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowerApp.swift; sourceTree = "<group>"; };
 		2FA9E04329D0D118009DA858 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -57,8 +53,6 @@
 			children = (
 				2FA9E04129D0D118009DA858 /* ShowerApp.swift */,
 				2FA9E04329D0D118009DA858 /* ContentView.swift */,
-				2F8D077F2A1815F70061A2F5 /* EraseButton.swift */,
-				2F8D07812A1818D10061A2F5 /* EraseButtonView.swift */,
 				2FA9E04529D0D118009DA858 /* Assets.xcassets */,
 				2FA9E04729D0D118009DA858 /* Preview Content */,
 			);
@@ -143,10 +137,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F8D07802A1815F70061A2F5 /* EraseButton.swift in Sources */,
 				2FA9E04429D0D118009DA858 /* ContentView.swift in Sources */,
 				2FA9E04229D0D118009DA858 /* ShowerApp.swift in Sources */,
-				2F8D07822A1818D10061A2F5 /* EraseButtonView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
