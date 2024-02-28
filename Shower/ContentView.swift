@@ -115,7 +115,7 @@ struct ContentView: View {
                                     
                                 }
                                     .disabled(fontSize <= minFontSize)
-                                    .accessibilityLabel"Decreate Font Size")
+                                    .accessibilityLabel("Decreate Font Size")
 
 //                                    .onLongPressGesture(minimumDuration: .infinity, maximumDistance: .infinity) {
 //                                    } onPressingChanged: {
