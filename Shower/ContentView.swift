@@ -89,7 +89,7 @@ struct ContentView: View {
                             HStack(spacing: 0) {
                                 
                                 // Erase button
-                                Button {
+                                Button (role: .destructive) {
                                     text = ""
                                 } label: {
                                     Image(systemName: "eraser")
