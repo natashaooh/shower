@@ -16,7 +16,8 @@ struct ContentView: View {
     @State private var textContentType: UITextContentType?
     
     // Buttons
-    private let eraseButtonSize: CGFloat = 45
+    private let eraseButtonSize: CGFloat = 35
+    private let pasteButtonSize: CGFloat = 30
     @State private var isPlusButtonPressed = false
     @State private var isMinusButtonPressed = false
     @State var timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
@@ -145,20 +146,20 @@ struct ContentView: View {
                                 
                                 // Paste button
                                 Button {
-                                    text = UIPasteboard.general.string ?? ""
+                                    if (UIPasteboard.general.hasStrings) {
+                                        text = UIPasteboard.general.string ?? ""
+                                    }
                                 } label: {
                                     Image(systemName: "doc.on.clipboard")
-                                        .font(.system(size: eraseButtonSize - 10))
+                                        .font(.system(size: pasteButtonSize))
                                         .padding()
                                         .frame(maxWidth: .infinity)
                                         .contentShape(Rectangle())
                                         .accessibility(hidden: true)
                                 }
-                                    .disabled(!UIPasteboard.general.hasStrings)
                                     .accessibilityLabel("Paste From Clipboard")
-
-                                    
                             }
+                            .opacity(isFocused ? 1 : 0)
                         }
                     }
                 }
